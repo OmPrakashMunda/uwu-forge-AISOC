@@ -1,0 +1,10 @@
+pwease num1 = 10
+pwease num2 = 25
+pwease num3 = 15
+pwease largest = num1
+
+IF num2 > largest THWEN pwease largest = num2 EWSE pwease largest = largest
+IF num3 > largest THWEN pwease largest = num3 EWSE pwease largest = largest
+
+pwint("The largest number is: ")
+pwint(largest)
