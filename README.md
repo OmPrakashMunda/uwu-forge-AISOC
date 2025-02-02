@@ -1,6 +1,6 @@
 # PythOWO 🌸
 
-A kawaii Python interpreter and code generation service that transforms regular Python into an uwu-fied programming language! Built during [Hackathon Name] to make coding more adorable.
+A kawaii Python interpreter and code generation service that transforms regular Python into an uwu-fied programming language! Built during AISOC Chronos v1.0 to make coding more adorable.
 
 ## What is PythOWO? ✨
 
@@ -9,7 +9,7 @@ PythOWO consists of two main components:
 1. **PythOWO Interpreter**: A custom Python interpreter that executes code written in PythOWO syntax. It features:
    - Custom lexer and parser for uwu-style syntax
    - Variable scope management
-   - Support for basic control structures (IF/EWIF/EWSE)
+   - Support for basic control structures (IF/EWIF/EWSE) 
    - Function definitions with FWUNCTION
    - Interactive shell with kawaii prompts
 
@@ -18,6 +18,35 @@ PythOWO consists of two main components:
    - Transforms regular Python into PythOWO syntax in real-time
    - Provides streaming responses for code generation
    - Executes PythOWO code and returns results
+   - Code sharing functionality with 24-hour expiration
+   - Multiple theme options for customization
+
+## Features 🌟
+
+### Core Features
+- Real-time code generation with AI
+- PythOWO syntax transformation
+- Code execution and output display
+- Interactive chat interface
+
+### New Additions
+1. **Code Sharing**:
+   - Generate shareable links for your code
+   - Easy-to-use copy functionality
+   - Links expire after 24 hours for security
+   - Clean, modal-based sharing interface
+
+2. **Theme Customization**:
+   - Multiple theme options (Blue, Pink, Purple)
+   - Persistent theme preferences
+   - Smooth theme transitions
+   - Mobile-responsive design
+
+3. **Code Management**:
+   - Edit code in-place
+   - Copy code with one click
+   - Run code and see output
+   - Share code instantly
 
 ## How It Works 🔧
 
@@ -60,11 +89,14 @@ FWUNCTION calculate(x) ->
 
 ## Tech Stack 🛠️
 
+- **Frontend**: HTML5, CSS3, JavaScript
 - **Backend**: Express.js, Node.js
 - **AI Model**: Hugging Face's Qwen2.5-72B-Instruct
 - **Interpreter**: Python
 - **Text Processing**: Regular Expressions
 - **API**: Server-Sent Events for streaming responses
+- **Styling**: FontAwesome icons, CSS animations
+- **Storage**: File-based code sharing system
 
 ## Technical Highlights 💫
 
@@ -83,5 +115,20 @@ FWUNCTION calculate(x) ->
    - Prompt engineering for code generation
    - Stream processing of model outputs
    - Real-time syntax transformation
+
+4. **User Experience**:
+   - Responsive modal dialogs
+   - Toast notifications for actions
+   - Theme persistence
+   - Loading states and animations
+   - Mobile-friendly design
+
+## Security Considerations 🔒
+
+- File-based sharing with random identifiers
+- 24-hour expiration for shared code
+- Path traversal protection
+- Input validation and sanitization
+- Secure file handling
 
 Built with 💝 for AISOC Chronos v1.0
