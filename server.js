@@ -4,6 +4,7 @@ const { HfInference } = require('@huggingface/inference');
 const { spawn } = require('child_process');
 const fs = require('fs').promises;
 const path = require('path');
+const crypto = require('crypto');
 require('dotenv').config();
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+
 function isCodeRequest(message) {
     const codeKeywords = [
         'code', 'program', 'function', 'script', 'implement',
@@ -36,7 +38,6 @@ function pythOWOify(code) {
             }
             return block;
         })
-        
         .replace(/# (.*)/g, (match, comment) => {
             const uwuified = comment
                 .replace(/[rl]/g, 'w')
@@ -145,7 +146,6 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-
 app.post('/run', async (req, res) => {
     const { code } = req.body;
     
@@ -160,6 +160,7 @@ app.post('/run', async (req, res) => {
         await fs.mkdir(tmpDir, { recursive: true });
         const tmpFile = path.join(tmpDir, `code_${Date.now()}.pyowo`);
         await fs.writeFile(tmpFile, code);
+        
         const output = await new Promise((resolve, reject) => {
             let stdout = '';
             let stderr = '';
@@ -188,14 +189,96 @@ app.post('/run', async (req, res) => {
         res.json({ output });
 
     } catch (error) {
-        console.error('Error running code:', error);
+        console.log('Error running code:', error);
         res.status(500).json({
             error: `Oopsie woopsie! An ewwow occuwwed: ${error.message} (╥﹏╥)`
         });
     }
 });
 
-const PORT = process.env.PORT || 3000;
+app.post('/share', async (req, res) => {
+    const { code } = req.body;
+    
+    if (!code) {
+        return res.status(400).json({
+            error: "No code pwovided! (｡•́︿•̀｡)"
+        });
+    }
+
+    try {
+        const filename = crypto.randomBytes(8).toString('hex') + '.py';
+        const sharePath = '/www/wwwroot/uwuforge/share';
+        const filePath = path.join(sharePath, filename);
+        await fs.mkdir(sharePath, { recursive: true });
+        await fs.writeFile(filePath, code, 'utf-8');
+        const shareUrl = `https://uwuforge.teamitj.tech/share/${filename}`;
+
+        res.json({ 
+            url: shareUrl,
+            message: 'Code shared successfuwwy! (✿◠‿◠)'
+        });
+
+    } catch (error) {
+        console.error('Error sharing code:', error);
+        res.status(500).json({
+            error: `Oopsie woopsie! An ewwow occuwwed: ${error.message} (╥﹏╥)`
+        });
+    }
+});
+
+
+app.get('/share/:filename', async (req, res) => {
+    try {
+        const { filename } = req.params;
+        const filePath = path.join('/home/www/uwuforge/share', filename);
+        if (!filename.match(/^[a-f0-9]+\.py$/)) {
+            return res.status(400).json({
+                error: "Invalid filename! (｡•́︿•̀｡)"
+            });
+        }
+
+        const code = await fs.readFile(filePath, 'utf-8');
+        res.type('text/plain').send(code);
+
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            res.status(404).json({
+                error: "File not found! (╥﹏╥)"
+            });
+        } else {
+            console.error('Error reading shared code:', error);
+            res.status(500).json({
+                error: "Oopsie woopsie! Something went wong! (╥﹏╥)"
+            });
+        }
+    }
+});
+
+async function cleanupOldFiles() {
+    try {
+        const sharePath = '/home/www/uwuforge/share';
+        const files = await fs.readdir(sharePath);
+        const now = Date.now();
+        const maxAge = 24 * 60 * 60 * 1000;
+
+        for (const file of files) {
+            const filePath = path.join(sharePath, file);
+            const stats = await fs.stat(filePath);
+            const fileAge = now - stats.mtime.getTime();
+
+            if (fileAge > maxAge) {
+                await fs.unlink(filePath);
+                console.log(`Deleted old file: ${file}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error cleaning up old files:', error);
+    }
+}
+
+setInterval(cleanupOldFiles, 24 * 60 * 60 * 1000);
+
+const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
     console.log(`Sewvew is wunning on powt ${PORT} (◕‿◕✿)`);
 });
